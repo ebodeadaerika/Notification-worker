@@ -1,0 +1,17 @@
+2026-11-04 10:38:38,411 INFO    worker: Worker started, listening on notifications:queue
+2026-11-04 10:56:43,515 INFO    worker: Worker stopped.
+2026-11-04 10:56:46,623 INFO    worker: Worker started, listening on notifications:queue
+2026-11-04 11:00:19,796 INFO    email: [MOCK EMAIL] to=student@example.com subject=Welcome
+2026-11-04 11:00:20,134 INFO    worker: SENT id=0ffed63f-6d17-4634-b657-c7a81ff0a737 type=email attempt=1
+2026-11-04 11:00:20,795 INFO    sms: [MOCK SMS] to=+237600000000 body=Your code is 123456
+2026-11-04 11:00:21,137 INFO    worker: SENT id=8a933865-dd25-437e-b445-364251e65626 type=sms attempt=1
+2026-11-04 11:00:21,819 INFO    push: [MOCK PUSH] to=device-token-abc title=New message body=You have a notification
+2026-11-04 11:00:22,139 INFO    worker: SENT id=e1da7775-934e-4cc8-8f82-76ca70642ae9 type=push attempt=1
+2026-11-04 11:01:59,640 WARNING worker: FAILED id=f0e2f9f4-128d-4fe7-8615-616f7de874ab attempt=1/3: simulated SMS provider failure
+2026-11-04 11:02:01,976 WARNING worker: FAILED id=f0e2f9f4-128d-4fe7-8615-616f7de874ab attempt=2/3: simulated SMS provider failure
+2026-11-04 11:02:06,315 WARNING worker: FAILED id=f0e2f9f4-128d-4fe7-8615-616f7de874ab attempt=3/3: simulated SMS provider failure
+2026-11-04 11:02:07,343 ERROR   worker: DEAD-LETTERED id=f0e2f9f4-128d-4fe7-8615-616f7de874ab after 3 attempts
+2026-11-04 11:18:03,735 WARNING worker: Redis connection problem (Timeout reading from socket), retrying in 3s...
+2026-11-04 11:19:14,058 WARNING worker: Redis connection problem (Timeout reading from socket), retrying in 3s...
+2026-11-04 11:24:38,503 WARNING worker: Redis connection problem (Timeout reading from socket), retrying in 3s...
+2026-11-04 11:24:41,554 WARNING worker: Redis connection problem (Error 11001 connecting to enjoyed-crow-158420.upstash.io:6379. getaddrinfo failed.), retrying in 3s...
