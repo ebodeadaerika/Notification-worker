@@ -7,7 +7,7 @@ import logging
 log = logging.getLogger("push")
 
 
-def send(msg: dict) -> None:
+def send(msg: dict, r=None) -> None:
     if msg.get("simulate_failure"):
         raise RuntimeError("simulated push provider failure")
     log.info("[MOCK PUSH] to=%s title=%s body=%s", msg["to"], msg["title"], msg["body"])

@@ -36,7 +36,7 @@ def send_with_retry(r, msg: dict) -> bool:
     last_error = None
     for attempt in range(1, config.MAX_RETRIES + 1):
         try:
-            handler(msg)
+            handler(msg, r)
             set_status(r, msg["id"], "sent", attempts=attempt)
             log.info("SENT id=%s type=%s attempt=%d", msg["id"], msg["type"], attempt)
             return True
@@ -60,6 +60,15 @@ def process_one(r, raw: str) -> None:
     except (json.JSONDecodeError, InvalidMessage) as exc:
         log.error("REJECTED invalid message: %s | raw=%s", exc, raw)
         r.lpush(config.DEAD_LETTER_QUEUE, json.dumps({"raw": raw, "error": str(exc)}))
+        return
+
+    # Only signed-up users may receive notifications.
+    if config.REQUIRE_REGISTERED_USER and not r.exists(f"{config.USER_PREFIX}{msg['user']}"):
+        reason = f"recipient {msg['user']!r} is not a registered user"
+        log.error("REJECTED id=%s: %s", msg["id"], reason)
+        msg["error"] = reason
+        r.lpush(config.DEAD_LETTER_QUEUE, json.dumps(msg))
+        set_status(r, msg["id"], "failed", error=reason)
         return
 
     set_status(r, msg["id"], "processing", type=msg["type"])
@@ -92,7 +101,8 @@ def main():
         _, raw = item
         process_one(r, raw)
 
-log.info("Worker stopped.")
+    log.info("Worker stopped.")
+
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ import config
 log = logging.getLogger("email")
 
 
-def send(msg: dict) -> None:
+def send(msg: dict, r=None) -> None:
     if config.EMAIL_MODE == "mock":
         log.info("[MOCK EMAIL] to=%s subject=%s", msg["to"], msg["subject"])
         return

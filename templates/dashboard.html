@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Your notifications{% endblock %}
+{% block content %}
+<header class="bar">
+  <div>
+    <h1>Hello, {{ name }}</h1>
+    <p class="muted">{{ email }}</p>
+  </div>
+  <form method="post" action="{{ url_for('logout') }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <button type="submit" class="secondary">Log out</button>
+  </form>
+</header>
+
+<section class="card">
+  <h2>Your inbox <span id="updated" class="muted"></span></h2>
+  <ul id="inbox">
+    {% for n in inbox %}
+      <li>
+        <strong>{{ n.title }}</strong>
+        <span class="muted">from {{ n["from"] }}</span>
+        <p>{{ n.body }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+  <p id="empty" class="muted" {% if inbox %}hidden{% endif %}>No notifications yet.</p>
+</section>
+
+<section class="card">
+  <h2>Send a notification</h2>
+  <p class="muted">Only people who have signed up can receive one. Try sending one to yourself.</p>
+  <form method="post" action="{{ url_for('send') }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <label>To (their account email) <input name="to" type="email" required value="{{ email }}"></label>
+    <label>Title <input name="title" required maxlength="{{ title_max }}"></label>
+    <label>Message <textarea name="body" required maxlength="{{ body_max }}" rows="3"></textarea></label>
+    <button type="submit">Send</button>
+  </form>
+</section>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

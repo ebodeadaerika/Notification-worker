@@ -1,10 +1,13 @@
 """Message format and validation."""
 import uuid
 
-VALID_TYPES = {"email", "sms", "push"}
+import config
+
+VALID_TYPES = {"inbox", "email", "sms", "push"}
 
 # Fields every message of a given type must contain.
 REQUIRED_FIELDS = {
+    "inbox": ["title", "body"],
     "email": ["to", "subject", "body"],
     "sms": ["to", "body"],
     "push": ["to", "title", "body"],  # "to" = device token or user id
@@ -23,9 +26,15 @@ def validate(msg: dict) -> dict:
     if msg_type not in VALID_TYPES:
         raise InvalidMessage(f"unknown type {msg_type!r}, expected one of {sorted(VALID_TYPES)}")
 
-    missing = [f for f in REQUIRED_FIELDS[msg_type] if not msg.get(f)]
+    required = list(REQUIRED_FIELDS[msg_type])
+    if config.REQUIRE_REGISTERED_USER:
+        required.append("user")  # the account that should receive this notification
+    missing = [f for f in required if not msg.get(f)]
     if missing:
         raise InvalidMessage(f"missing fields for {msg_type}: {missing}")
+
+    if msg.get("user"):
+        msg["user"] = str(msg["user"]).strip().lower()
 
     msg.setdefault("id", str(uuid.uuid4()))
     return msg

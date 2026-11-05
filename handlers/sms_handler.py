@@ -8,7 +8,7 @@ import logging
 log = logging.getLogger("sms")
 
 
-def send(msg: dict) -> None:
+def send(msg: dict, r=None) -> None:
     if msg.get("simulate_failure"):  # handy for demoing retries
         raise RuntimeError("simulated SMS provider failure")
     log.info("[MOCK SMS] to=%s body=%s", msg["to"], msg["body"])
